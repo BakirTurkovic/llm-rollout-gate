@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: ./app/api
+    image: llm-gate-api:v1
+    container_name: llm-gate-api
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.50
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17
+    container_name: llm-gate-postgres
+    restart: unless-stopped
+    mem_limit: 256m
+    cpus: 0.50
+    env_file:
+      - .env
+    volumes:
+      - llm-gate-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  llm-gate-postgres-data:
+    external: true
