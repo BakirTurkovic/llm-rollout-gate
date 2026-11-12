@@ -23,8 +23,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r app/api/requirements.txt
+          python -m pip install -r app/api/requirements-dev.txt
 
       - name: Validate Python syntax
         run: |
           python -m compileall -q app/api
+      - name: Run tests
+        run: |
+          python -m pytest -v
