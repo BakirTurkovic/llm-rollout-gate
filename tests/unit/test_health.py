@@ -10,8 +10,6 @@ def test_health_endpoint():
 
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
-import app.api.main as main
-
 
 def test_ready_endpoint_when_database_is_available(monkeypatch):
     monkeypatch.setenv("DATABASE_PASSWORD", "test-password")
